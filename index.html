@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple – Do'kon</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;background:#fbfbfd;color:#1d1d1f}
+a{color:inherit;text-decoration:none}
+nav{position:sticky;top:0;z-index:10;background:rgba(251,251,253,.85);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid #d2d2d7}
+.bar{max-width:1100px;margin:auto;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:16px}
+.logo{font-size:20px}
+.links{display:flex;gap:28px;list-style:none}
+.links a{font-size:13px;color:#424245;cursor:pointer;padding:4px 0}
+.links a:hover,.links a.active{color:#000;font-weight:600}
+.tools{display:flex;align-items:center;gap:14px}
+#q{border:1px solid #d2d2d7;border-radius:8px;padding:5px 10px;font-size:13px;width:150px;background:#fff}
+.cart{font-size:13px;cursor:pointer;background:none;border:0}
+.burger{display:none;background:none;border:0;font-size:22px;cursor:pointer}
+header.hero{text-align:center;padding:56px 20px 30px}
+.hero h1{font-size:clamp(34px,6vw,56px);letter-spacing:-.02em}
+.hero p{font-size:21px;color:#6e6e73;margin-top:8px}
+.top{max-width:1100px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center}
+.top span{font-size:14px;color:#6e6e73}
+select{padding:6px 10px;border-radius:8px;border:1px solid #d2d2d7;background:#fff;font-size:13px}
+.grid{max-width:1100px;margin:auto;padding:10px 20px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{background:#fff;border-radius:18px;padding:18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;flex-direction:column}
+.card .im{height:200px;display:grid;place-items:center;margin-bottom:10px}
+.card img{max-height:200px;max-width:100%;object-fit:contain}
+.card h3{font-size:17px}
+.card .c{font-size:13px;color:#6e6e73;margin:2px 0 8px}
+.card .p{font-size:15px;margin-bottom:12px}
+.card button{margin-top:auto;background:#0071e3;color:#fff;border:0;border-radius:980px;padding:9px 18px;font-size:14px;cursor:pointer}
+.card button:hover{background:#0077ed}
+.empty{grid-column:1/-1;text-align:center;color:#6e6e73;padding:40px}
+.signup{background:#f5f5f7;padding:60px 20px}
+.signup form{max-width:420px;margin:auto;background:#fff;border-radius:18px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.signup h2{font-size:28px;text-align:center;letter-spacing:-.01em}
+.signup .sub{text-align:center;color:#6e6e73;font-size:14px;margin:6px 0 20px}
+.signup label{display:block;font-size:13px;margin:12px 0 4px;color:#424245}
+.signup input[type=text],.signup input[type=email],.signup input[type=password]{width:100%;padding:11px 12px;border:1px solid #d2d2d7;border-radius:10px;font-size:15px}
+.signup input:focus{outline:2px solid #0071e3;border-color:transparent}
+.signup .err{color:#d70015;font-size:12px;min-height:16px;margin-top:3px}
+.signup .chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-top:14px}
+.signup button{width:100%;margin-top:18px;background:#0071e3;color:#fff;border:0;border-radius:980px;padding:12px;font-size:16px;cursor:pointer}
+.signup button:hover{background:#0077ed}
+.ok{display:none;text-align:center;padding:20px 0;font-size:17px}
+footer{text-align:center;font-size:12px;color:#6e6e73;padding:24px;border-top:1px solid #d2d2d7}
+.heart{position:absolute;top:12px;right:12px;background:none;border:0;font-size:20px;cursor:pointer;color:#86868b;line-height:1}
+.heart.on{color:#ff3b30}
+.card{position:relative;transition:transform .2s}
+.card:hover{transform:translateY(-3px)}
+.card .im,.card h3{cursor:pointer}
+.card .row{display:flex;gap:8px;justify-content:center}
+.card .row .ghost{flex:0 0 auto}
+.ghost{background:#e8e8ed!important;color:#0066cc!important}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.ov.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(400px,100%);background:#fff;z-index:30;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column}
+.drawer.show{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e5ea;font-size:18px}
+.dh button,#mclose{background:none;border:0;font-size:20px;cursor:pointer}
+#items{flex:1;overflow:auto;padding:10px 20px}
+.it{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f3}
+.it img{width:56px;height:56px;object-fit:contain}
+.it .t{flex:1;font-size:14px}.it .t small{color:#6e6e73;display:block}
+.qty{display:flex;align-items:center;gap:6px;font-size:14px}
+.qty button{width:24px;height:24px;border-radius:50%;border:1px solid #d2d2d7;background:#fff;cursor:pointer}
+.df{padding:16px 20px;border-top:1px solid #e5e5ea;display:grid;gap:8px}
+.tot{display:flex;justify-content:space-between;font-size:17px}
+.df button{border:0;border-radius:980px;padding:11px;font-size:15px;cursor:pointer;background:#0071e3;color:#fff}
+.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.45);z-index:40;padding:16px}
+.modal.show{display:grid}
+.mb{background:#fff;border-radius:22px;max-width:760px;width:100%;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:24px;position:relative;align-items:center}
+.mb #mclose{position:absolute;top:12px;right:16px}
+.mb img{width:100%;max-height:300px;object-fit:contain}
+.mb h2{font-size:26px}.mb p{color:#6e6e73;margin:4px 0 14px}
+#mopts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#mopts button{border:1px solid #d2d2d7;background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;font-size:14px}
+#mopts button.sel{border:2px solid #0071e3;padding:8px 13px}
+#mprice{font-size:22px;margin-bottom:14px}
+#madd{background:#0071e3;color:#fff;border:0;border-radius:980px;padding:12px 24px;font-size:16px;cursor:pointer}
+#toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:#1d1d1f;color:#fff;padding:12px 20px;border-radius:980px;font-size:14px;transition:.3s;z-index:50;opacity:0}
+#toast.show{transform:translate(-50%,0);opacity:1}
+#up{position:fixed;right:18px;bottom:18px;width:42px;height:42px;border-radius:50%;border:0;background:#1d1d1f;color:#fff;font-size:18px;cursor:pointer;display:none;z-index:9}
+.cart,.fav{font-size:13px;cursor:pointer;background:none;border:0}
+.fav.on{color:#ff3b30}
+@media(max-width:760px){
+ .mb{grid-template-columns:1fr}
+ .burger{display:block}
+ .links{display:none;position:absolute;top:48px;left:0;right:0;background:#fbfbfd;flex-direction:column;gap:0;border-bottom:1px solid #d2d2d7}
+ .links.open{display:flex}
+ .links a{display:block;padding:14px 20px;font-size:16px}
+ #q{width:100px}
+}
+
+/* ===== Qora fon ===== */
+body{background:#000;color:#f5f5f7}
+nav{background:rgba(22,22,23,.8);border-bottom-color:#2c2c2e}
+.links a{color:#a1a1a6}.links a:hover,.links a.active{color:#fff}
+.links{background:#161617}
+#q,select{background:#1c1c1e;color:#f5f5f7;border-color:#3a3a3c}
+.cart,.fav,.burger{color:#f5f5f7}
+.hero p,.top span,.card .c,.empty,.signup .sub,footer,.mb p{color:#a1a1a6}
+.card{background:#1c1c1e;box-shadow:none}
+.signup{background:#0b0b0c}
+.signup form{background:#1c1c1e;box-shadow:none}
+.signup label{color:#c7c7cc}
+.signup input[type=text],.signup input[type=email],.signup input[type=password]{background:#2c2c2e;color:#f5f5f7;border-color:#3a3a3c}
+.signup .err{color:#ff6961}
+footer{border-top-color:#2c2c2e}
+.drawer,.mb{background:#1c1c1e;color:#f5f5f7}
+.dh,.df{border-color:#2c2c2e}
+.it{border-bottom-color:#2c2c2e}
+.it .t small{color:#a1a1a6}
+.qty button{background:#2c2c2e;color:#f5f5f7;border-color:#3a3a3c}
+.dh button,#mclose{color:#f5f5f7}
+#mopts button{background:#2c2c2e;color:#f5f5f7;border-color:#3a3a3c}
+#mopts button.sel{border-color:#2997ff}
+.ghost{background:#2c2c2e!important;color:#2997ff!important}
+.card img,.it img,.mb img{filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+#toast{background:#f5f5f7;color:#1d1d1f}
+#up{background:#f5f5f7;color:#1d1d1f}
+</style>
+</head>
+<body>
+<nav>
+ <div class="bar">
+  <a class="logo" href="#" aria-label="Bosh sahifa">&#63743;</a>
+  <ul class="links" id="links">
+   <li><a data-f="all" class="active">Hammasi</a></li>
+   <li><a data-f="iPhone 17">iPhone 17</a></li>
+   <li><a data-f="iPhone 16">iPhone 16</a></li>
+   <li><a data-f="iPhone 15">iPhone 15</a></li>
+   <li><a data-f="MacBook">MacBook</a></li>
+   <li><a data-f="Watch">Watch</a></li>
+  </ul>
+  <div class="tools">
+   <input id="q" type="search" placeholder="Qidirish">
+   <button class="fav" id="fav" title="Sevimlilar">♡ <b id="favc">0</b></button>
+   <button class="cart" id="cart">🛍 <b id="count">0</b></button>
+   <button class="burger" id="burger" aria-label="Menyu">☰</button>
+  </div>
+ </div>
+</nav>
+
+<header class="hero">
+ <h1>Apple do'koni</h1>
+ <p>iPhone, MacBook va Watch. O'zingizga mosini tanlang.</p>
+</header>
+
+<div class="top">
+ <span id="total"></span>
+ <select id="sort">
+  <option value="def">Tartib: standart</option>
+  <option value="asc">Narx: arzondan qimmatga</option>
+  <option value="desc">Narx: qimmatdan arzonga</option>
+ </select>
+</div>
+
+<main class="grid" id="grid"></main>
+<div class="ov" id="ov"></div>
+<aside class="drawer" id="drawer">
+ <div class="dh"><b>Savat</b><button id="dclose" aria-label="Yopish">✕</button></div>
+ <div id="items"></div>
+ <div class="df">
+  <div class="tot"><span>Jami</span><b id="sum">$0</b></div>
+  <button id="checkout">Buyurtma berish</button>
+  <button id="clr" class="ghost">Savatni tozalash</button>
+ </div>
+</aside>
+<div class="modal" id="modal">
+ <div class="mb">
+  <button id="mclose" aria-label="Yopish">✕</button>
+  <img id="mimg" alt="">
+  <div>
+   <h2 id="mname"></h2><p id="mcol"></p>
+   <div id="mopts"></div>
+   <div id="mprice"></div>
+   <button id="madd">Savatga qo'shish</button>
+  </div>
+ </div>
+</div>
+<div id="toast"></div>
+<button id="up" aria-label="Yuqoriga">↑</button>
+<section class="signup" id="signup">
+ <form id="form" novalidate>
+  <h2>Ro'yxatdan o'tish</h2>
+  <p class="sub">Yangi mahsulotlar va narxlardan birinchi bo'lib xabardor bo'ling.</p>
+  <div id="fields">
+   <label for="name">Ism</label>
+   <input id="name" type="text" autocomplete="name"><div class="err" data-e="name"></div>
+   <label for="email">Email</label>
+   <input id="email" type="email" autocomplete="email"><div class="err" data-e="email"></div>
+   <label for="pw">Parol</label>
+   <input id="pw" type="password" autocomplete="new-password"><div class="err" data-e="pw"></div>
+   <label for="pw2">Parolni takrorlang</label>
+   <input id="pw2" type="password" autocomplete="new-password"><div class="err" data-e="pw2"></div>
+   <label class="chk"><input id="agree" type="checkbox"> Foydalanish shartlariga roziman</label>
+   <div class="err" data-e="agree"></div>
+   <button type="submit">Ro'yxatdan o'tish</button>
+  </div>
+  <div class="ok" id="ok"></div>
+ </form>
+</section>
+<footer>Bu o'quv loyihasi. Apple va iPhone — Apple Inc. savdo belgilari. Narxlar namuna sifatida berilgan.</footer>
+
+<script>
+/* ===== RASMLAR =====
+   Haqiqiy rasmlarni images/ papkasiga iphone-1.jpg ... iphone-50.jpg nomi bilan qo'ying
+   YOKI quyidagi IMG funksiyasini o'zingizning rasm URL manzillaringiz bilan almashtiring.
+   Rasm topilmasa, avtomatik chizilgan iPhone ko'rinadi. */
+const IMG = (kind,i) => `images/${kind}-${i}.jpg`;   // iphone-1.jpg, macbook-1.jpg, watch-1.jpg ...
+
+/* nom, qatorga tegishli seriya, boshlang'ich narx ($), ranglar */
+const models = [
+ ["iPhone 17 Pro Max","iPhone 17",1199,[["Cosmic Orange","#e0743c"],["Deep Blue","#2f4a6d"],["Silver","#e3e4e6"]]],
+ ["iPhone 17 Pro","iPhone 17",1099,[["Cosmic Orange","#e0743c"],["Deep Blue","#2f4a6d"],["Silver","#e3e4e6"]]],
+ ["iPhone Air","iPhone 17",999,[["Space Black","#2b2b2d"],["Cloud White","#f2f2ef"],["Light Gold","#e6d3b3"],["Sky Blue","#b9d3e8"]]],
+ ["iPhone 17","iPhone 17",799,[["Black","#222"],["White","#f5f5f0"],["Mist Blue","#b8cde0"],["Sage","#b6c4a8"],["Lavender","#cbbfe0"]]],
+ ["iPhone 16e","iPhone 16",599,[["Black","#222"],["White","#f5f5f0"]]],
+ ["iPhone 16 Pro Max","iPhone 16",1199,[["Desert Titanium","#c9b29b"],["Natural Titanium","#b5b0a8"],["White Titanium","#e5e3de"],["Black Titanium","#3a3a3c"]]],
+ ["iPhone 16 Pro","iPhone 16",999,[["Desert Titanium","#c9b29b"],["Natural Titanium","#b5b0a8"],["White Titanium","#e5e3de"],["Black Titanium","#3a3a3c"]]],
+ ["iPhone 16 Plus","iPhone 16",899,[["Ultramarine","#7f93e8"],["Teal","#9cc7c4"]]],
+ ["iPhone 16","iPhone 16",799,[["Black","#222"],["White","#f5f5f0"],["Pink","#f0c4d4"],["Teal","#9cc7c4"],["Ultramarine","#7f93e8"]]],
+ ["iPhone 15 Pro Max","iPhone 15",1099,[["Natural Titanium","#b5b0a8"],["Blue Titanium","#4b5a6e"],["White Titanium","#e5e3de"],["Black Titanium","#3a3a3c"]]],
+ ["iPhone 15 Pro","iPhone 15",999,[["Natural Titanium","#b5b0a8"],["Blue Titanium","#4b5a6e"],["White Titanium","#e5e3de"],["Black Titanium","#3a3a3c"]]],
+ ["iPhone 15 Plus","iPhone 15",799,[["Black","#3b3b3d"],["Blue","#cfdde8"],["Green","#d3e0cf"],["Yellow","#f2eac2"],["Pink","#f0dcdc"]]],
+ ["iPhone 15","iPhone 15",699,[["Black","#3b3b3d"],["Blue","#cfdde8"],["Green","#d3e0cf"],["Yellow","#f2eac2"],["Pink","#f0dcdc"]]],
+ /* MacBook */
+ ["MacBook Air 13\" M4","MacBook",999,[["Midnight","#2e3642"],["Starlight","#e6ddd0"],["Sky Blue","#a9c4dc"],["Silver","#e3e4e6"]],"macbook"],
+ ["MacBook Air 15\" M4","MacBook",1199,[["Midnight","#2e3642"],["Starlight","#e6ddd0"],["Sky Blue","#a9c4dc"],["Silver","#e3e4e6"]],"macbook"],
+ ["MacBook Pro 14\" M5","MacBook",1599,[["Space Black","#2d2d2f"],["Silver","#e3e4e6"]],"macbook"],
+ ["MacBook Pro 16\" M4 Pro","MacBook",2499,[["Space Black","#2d2d2f"],["Silver","#e3e4e6"]],"macbook"],
+ /* Apple Watch */
+ ["Apple Watch Series 11","Watch",399,[["Jet Black","#1c1c1e"],["Rose Gold","#e6bfb0"],["Silver","#e3e4e6"],["Space Gray","#6b6b70"]],"watch"],
+ ["Apple Watch Ultra 3","Watch",799,[["Natural","#c8c3b8"],["Black","#1c1c1e"]],"watch"],
+ ["Apple Watch SE 3","Watch",249,[["Midnight","#1f2733"],["Starlight","#e6ddd0"]],"watch"]
+];
+const products=[];const cnt={};
+models.forEach(([name,series,price,cols,kind="iphone"])=>cols.forEach(([color,hex])=>{
+ cnt[kind]=(cnt[kind]||0)+1;
+ products.push({id:products.length+1,name,series,price,color,hex,kind,img:IMG(kind,cnt[kind])});
+}));
+/* 50 iPhone + 12 MacBook + 8 Watch = 70 ta mahsulot */
+
+const $=s=>document.querySelector(s);
+const grid=$("#grid");let filter="all",term="",sort="def",favOnly=false;
+const OPTS={iphone:[["128 GB",0],["256 GB",100],["512 GB",300],["1 TB",500]],macbook:[["256 GB",0],["512 GB",200],["1 TB",400]],watch:[["42 mm",0],["46 mm",30]]};
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let cart=load("cart",[]),favs=load("favs",[]);
+const byId=id=>products.find(p=>p.id===id);
+const unit=(p,o)=>p.price+OPTS[p.kind][o][1];
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),1800)}
+function setImg(img,p){img.onerror=function(){this.onerror=null;this.src=phoneSVG(p.hex,p.kind,p.name)};img.src=p.img}
+function addToCart(id,o=0){
+ const l=cart.find(c=>c.id===id&&c.o===o);
+ l?l.q++:cart.push({id,o,q:1});
+ save("cart",cart);renderCart();toast("Savatga qo'shildi");
+}
+function renderCart(){
+ const box=$("#items");let sum=0,cnt=0;box.innerHTML=cart.length?"":'<p style="padding:30px 0;color:#6e6e73;text-align:center">Savat bo\'sh.</p>';
+ cart.forEach((c,i)=>{
+  const p=byId(c.id);sum+=unit(p,c.o)*c.q;cnt+=c.q;
+  const r=document.createElement("div");r.className="it";
+  r.innerHTML=`<img alt=""><div class="t">${p.name}<small>${p.color} · ${OPTS[p.kind][c.o][0]}</small>${usd(unit(p,c.o))}</div>
+  <div class="qty"><button>−</button><span>${c.q}</span><button>+</button></div>`;
+  setImg(r.querySelector("img"),p);
+  const [m,pl]=r.querySelectorAll("button");
+  m.onclick=()=>{c.q--;if(c.q<=0)cart.splice(i,1);save("cart",cart);renderCart()};
+  pl.onclick=()=>{c.q++;save("cart",cart);renderCart()};
+  box.appendChild(r);
+ });
+ $("#sum").textContent=usd(sum);$("#count").textContent=cnt;
+}
+function toggleFav(id){favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];save("favs",favs);render()}
+const panel=(el,on)=>{$(el).classList.toggle("show",on);if(el==="#drawer")$("#ov").classList.toggle("show",on)};
+let cur=null,curO=0;
+function openModal(p){
+ cur=p;curO=0;$("#mname").textContent=p.name;$("#mcol").textContent=p.color;setImg($("#mimg"),p);
+ const box=$("#mopts");box.innerHTML="";
+ OPTS[p.kind].forEach(([l],i)=>{const b=document.createElement("button");b.textContent=l;if(!i)b.className="sel";
+  b.onclick=()=>{curO=i;[...box.children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");$("#mprice").textContent=usd(unit(p,i))};box.appendChild(b)});
+ $("#mprice").textContent=usd(unit(p,0));panel("#modal",true);
+}
+
+function shade(hex,a){
+ const n=parseInt(hex.slice(1),16);
+ const f=c=>Math.max(0,Math.min(255,Math.round(c+(a>0?(255-c)*a:c*a))));
+ return `rgb(${f(n>>16)},${f(n>>8&255)},${f(n&255)})`;
+}
+function phoneSVG(hex,kind,name=""){
+ const hi=shade(hex,.45),mid=shade(hex,.1),lo=shade(hex,-.35);
+ const icons=['#34c759','#0a84ff','#ff9f0a','#ff453a','#bf5af2','#64d2ff','#ffd60a','#30d158'];
+ const defs=`<defs>
+ <linearGradient id='b' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${hi}'/><stop offset='.45' stop-color='${hex}'/><stop offset='1' stop-color='${lo}'/></linearGradient>
+ <linearGradient id='s' x1='0' y1='0' x2='.8' y2='1'><stop offset='0' stop-color='#0d1b3d'/><stop offset='.55' stop-color='#4a2f86'/><stop offset='1' stop-color='#ff6a3d'/></linearGradient>
+ <radialGradient id='l'><stop offset='0' stop-color='#4d6fb0'/><stop offset='.4' stop-color='#141a2b'/><stop offset='1' stop-color='#000'/></radialGradient>
+ <linearGradient id='r' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#f5f5f7'/><stop offset='.5' stop-color='#8e8e93'/><stop offset='1' stop-color='#3a3a3c'/></linearGradient>
+ <radialGradient id='sh'><stop offset='0' stop-color='#000' stop-opacity='.55'/><stop offset='1' stop-color='#000' stop-opacity='0'/></radialGradient>
+ <clipPath id='c'><rect x='15' y='15' width='90' height='204' rx='16'/></clipPath></defs>`;
+ let svg;
+ if(kind==="macbook"){
+  const keys=[0,1,2,3].map(r=>Array.from({length:14},(_,i)=>`<rect x='${52+i*15.3}' y='${160+r*6.2}' width='13' height='4.6' rx='1' fill='#0c0c0e'/>`).join('')).join('');
+  svg=`<svg xmlns='http://www.w3.org/2000/svg' width='320' height='215' viewBox='0 0 320 215'>${defs}
+  <ellipse cx='160' cy='203' rx='150' ry='8' fill='url(#sh)'/>
+  <rect x='52' y='10' width='216' height='144' rx='11' fill='url(#b)' stroke='${lo}' stroke-width='1.5'/>
+  <rect x='59' y='17' width='202' height='130' rx='5' fill='#000'/>
+  <clipPath id='m'><rect x='61' y='19' width='198' height='126' rx='3'/></clipPath>
+  <g clip-path='url(#m)'><rect x='61' y='19' width='198' height='126' fill='url(#s)'/>
+   <circle cx='110' cy='80' r='60' fill='#ff7a59' opacity='.35'/><circle cx='220' cy='110' r='70' fill='#3a86ff' opacity='.35'/>
+   <rect x='61' y='19' width='198' height='8' fill='#000' opacity='.35'/>
+   <circle cx='68' cy='23' r='2.2' fill='#fff' opacity='.8'/><rect x='76' y='21.5' width='26' height='3' rx='1.5' fill='#fff' opacity='.6'/>
+   <rect x='120' y='42' width='80' height='54' rx='5' fill='#fff' opacity='.16'/>
+   <rect x='112' y='130' width='96' height='12' rx='6' fill='#fff' opacity='.28'/>
+   ${icons.slice(0,6).map((c,i)=>`<rect x='${118+i*14.5}' y='132' width='8' height='8' rx='2' fill='${c}'/>`).join('')}
+   <path d='M61 19h120L61 100z' fill='#fff' opacity='.06'/></g>
+  <rect x='140' y='17' width='40' height='7' rx='3.5' fill='#000'/><circle cx='160' cy='20.5' r='1.5' fill='#1c2a44'/>
+  <path d='M8 156h304l-8 28q-2 6-9 6H25q-7 0-9-6z' fill='url(#b)' stroke='${lo}' stroke-width='1.5'/>
+  <path d='M8 156h304' stroke='${hi}' stroke-width='1.5'/>
+  <rect x='128' y='156' width='64' height='5' rx='2.5' fill='${lo}' opacity='.7'/>
+  <rect x='44' y='160' width='232' height='27' rx='2' fill='#0a0a0c' opacity='.0'/>
+  ${keys.replace(/y='16\d/,m=>m)}
+  <rect x='128' y='186' width='64' height='0' fill='none'/>
+  <path d='M24 190h272l-3 5H27z' fill='${lo}' opacity='.55'/></svg>`;
+ }else if(kind==="watch"){
+  const ticks=Array.from({length:12},(_,i)=>{const a=i*Math.PI/6,r1=36,r2=i%3?39:42;return `<line x1='${70+Math.sin(a)*r1}' y1='${115-Math.cos(a)*r1}' x2='${70+Math.sin(a)*r2}' y2='${115-Math.cos(a)*r2}' stroke='#fff' stroke-width='${i%3?1.2:2.4}' opacity='.9'/>`}).join('');
+  const holes=Array.from({length:5},(_,i)=>`<circle cx='70' cy='${150+i*13}' r='2.3' fill='#000' opacity='.35'/>`).join('');
+  svg=`<svg xmlns='http://www.w3.org/2000/svg' width='140' height='235' viewBox='0 0 140 235'>${defs}
+  <ellipse cx='70' cy='228' rx='42' ry='5' fill='url(#sh)'/>
+  <path d='M46 84l4-76q1-6 7-6h26q6 0 7 6l4 76z' fill='url(#b)'/>
+  <path d='M46 146l4 76q1 6 7 6h26q6 0 7-6l4-76z' fill='url(#b)'/>
+  ${holes}
+  <path d='M46 84l4-76' stroke='${hi}' stroke-width='1' opacity='.6'/>
+  <rect x='20' y='62' width='100' height='106' rx='30' fill='url(#b)' stroke='${lo}' stroke-width='1.5'/>
+  <rect x='118' y='96' width='9' height='24' rx='3.5' fill='url(#r)'/>
+  <rect x='118' y='126' width='6' height='15' rx='2.5' fill='${lo}'/>
+  <rect x='27' y='69' width='86' height='92' rx='24' fill='#000'/>
+  <rect x='27' y='69' width='86' height='92' rx='24' fill='none' stroke='#fff' stroke-opacity='.12'/>
+  ${ticks}
+  <circle cx='70' cy='115' r='22' fill='none' stroke='#ff3b30' stroke-width='3' stroke-dasharray='62 80' stroke-linecap='round' transform='rotate(-90 70 115)'/>
+  <circle cx='70' cy='115' r='15' fill='none' stroke='#30d158' stroke-width='3' stroke-dasharray='55 40' stroke-linecap='round' transform='rotate(-90 70 115)'/>
+  <line x1='70' y1='115' x2='70' y2='94' stroke='#fff' stroke-width='3' stroke-linecap='round'/>
+  <line x1='70' y1='115' x2='86' y2='122' stroke='#fff' stroke-width='3' stroke-linecap='round'/>
+  <line x1='70' y1='122' x2='70' y2='84' stroke='#ff9f0a' stroke-width='1.2' transform='rotate(40 70 115)'/>
+  <circle cx='70' cy='115' r='3' fill='#ff9f0a'/>
+  <path d='M27 69h50L27 130z' fill='#fff' opacity='.07'/></svg>`;
+ }else{
+  const air=/Air/.test(name),pro=/Pro/.test(name),single=air||/16e/.test(name);
+  const lenses=pro?3:single?1:2;
+  const pos={1:[[36,36]],2:[[36,34],[36,66]],3:[[34,34],[34,66],[62,50]]}[lenses];
+  const lens=(x,y)=>`<circle cx='${x}' cy='${y}' r='13' fill='url(#r)'/><circle cx='${x}' cy='${y}' r='10.5' fill='#0b0b0d'/><circle cx='${x}' cy='${y}' r='6.5' fill='url(#l)'/><circle cx='${x-2}' cy='${y-2.5}' r='1.8' fill='#fff' opacity='.85'/>`;
+  let cam;
+  if(air){cam=`<rect x='6' y='16' width='108' height='46' rx='14' fill='#17181a' opacity='.82'/>${lens(88,39)}<circle cx='56' cy='30' r='4' fill='#f4e9c8'/><circle cx='56' cy='48' r='3.2' fill='#050505'/>`}
+  else if(single){cam=`<rect x='14' y='14' width='46' height='46' rx='15' fill='#fff' opacity='.1' stroke='${hi}' stroke-opacity='.6'/>${lens(37,37)}<circle cx='70' cy='26' r='4' fill='#f4e9c8'/>`}
+  else{const w=lenses===3?72:50,h=lenses===3?76:78;
+   cam=`<rect x='14' y='14' width='${w}' height='${h}' rx='20' fill='#fff' opacity='.1' stroke='${hi}' stroke-opacity='.6'/>${pos.map(p=>lens(...p)).join('')}<circle cx='${14+w+11}' cy='26' r='4' fill='#f4e9c8'/>${lenses===3?`<circle cx='${14+w+11}' cy='42' r='3.2' fill='#050505'/>`:''}`}
+  const apps=Array.from({length:8},(_,i)=>`<rect x='${22+(i%4)*20.5}' y='${150+Math.floor(i/4)*22}' width='16' height='16' rx='4.5' fill='${icons[i]}'/>`).join('');
+  const dock=[0,1,2,3].map(i=>`<rect x='${25+i*20.5}' y='198' width='12' height='12' rx='3.5' fill='${icons[7-i]}'/>`).join('');
+  svg=`<svg xmlns='http://www.w3.org/2000/svg' width='240' height='225' viewBox='0 0 240 225'>${defs}
+  <ellipse cx='60' cy='219' rx='46' ry='4' fill='url(#sh)'/><ellipse cx='178' cy='219' rx='46' ry='4' fill='url(#sh)'/>
+  <g transform='translate(6,4) scale(.89)'>
+   <rect x='-1.5' y='62' width='2.5' height='14' rx='1' fill='${lo}'/><rect x='-1.5' y='84' width='2.5' height='22' rx='1' fill='${lo}'/><rect x='-1.5' y='112' width='2.5' height='22' rx='1' fill='${lo}'/><rect x='119' y='92' width='2.5' height='34' rx='1' fill='${lo}'/>
+   <rect x='6' y='6' width='108' height='222' rx='25' fill='url(#b)' stroke='${lo}' stroke-width='1.5'/>
+   <rect x='7.5' y='7.5' width='105' height='219' rx='23.5' fill='none' stroke='${hi}' stroke-opacity='.7'/>
+   <rect x='12' y='12' width='96' height='210' rx='19' fill='#000'/>
+   <g clip-path='url(#c)'><rect x='15' y='15' width='90' height='204' fill='url(#s)'/>
+    <circle cx='35' cy='80' r='45' fill='#ff7a59' opacity='.4'/><circle cx='95' cy='140' r='50' fill='#3a86ff' opacity='.4'/>
+    <text x='60' y='40' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='8' fill='#fff' opacity='.85'>Tue 17 Nov</text>
+    <text x='60' y='78' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='36' font-weight='300' fill='#fff'>9:41</text>
+    ${apps}<rect x='19' y='194' width='82' height='20' rx='10' fill='#fff' opacity='.22'/>${dock}
+    <path d='M15 15h54L15 150z' fill='#fff' opacity='.07'/></g>
+   <rect x='44' y='21' width='32' height='10' rx='5' fill='#000'/>
+  </g>
+  <g transform='translate(126,4) scale(.89)'>
+   <rect x='6' y='6' width='108' height='222' rx='25' fill='url(#b)' stroke='${lo}' stroke-width='1.5'/>
+   <rect x='7.5' y='7.5' width='105' height='219' rx='23.5' fill='none' stroke='${hi}' stroke-opacity='.7'/>
+   <path d='M7 7h60L7 120z' fill='#fff' opacity='.08'/>
+   ${cam}
+   <circle cx='60' cy='140' r='8' fill='${lo}' opacity='.28'/>
+  </g></svg>`;
+ }
+ return "data:image/svg+xml,"+encodeURIComponent(svg);
+}
+const usd=v=>"$"+v.toLocaleString("en-US");
+
+function render(){
+ let list=products.filter(p=>(filter==="all"||p.series===filter)&&(!favOnly||favs.includes(p.id))&&(p.name+" "+p.color).toLowerCase().includes(term));
+ if(sort==="asc")list.sort((a,b)=>a.price-b.price);
+ if(sort==="desc")list.sort((a,b)=>b.price-a.price);
+ $("#total").textContent=list.length+" ta mahsulot";$("#favc").textContent=favs.length;$("#fav").classList.toggle("on",favOnly);
+ grid.innerHTML=list.length?"":'<div class="empty">Hech narsa topilmadi.</div>';
+ list.forEach(p=>{
+  const d=document.createElement("article");d.className="card";
+  d.innerHTML=`<button class="heart ${favs.includes(p.id)?"on":""}" aria-label="Sevimli">${favs.includes(p.id)?"♥":"♡"}</button>
+  <div class="im"><img loading="lazy" alt="${p.name} ${p.color}"></div>
+  <h3>${p.name}</h3><div class="c">${p.color}</div><div class="p">${usd(p.price)} dan</div>
+  <div class="row"><button class="add">Savatga</button><button class="ghost more">Batafsil</button></div>`;
+  setImg(d.querySelector("img"),p);
+  d.querySelector(".heart").onclick=()=>toggleFav(p.id);
+  d.querySelector(".im").onclick=d.querySelector("h3").onclick=d.querySelector(".more").onclick=()=>openModal(p);
+  d.querySelector(".add").onclick=()=>addToCart(p.id);
+  grid.appendChild(d);
+ });
+}
+
+document.querySelectorAll("#links a").forEach(a=>a.onclick=()=>{
+ document.querySelectorAll("#links a").forEach(x=>x.classList.remove("active"));
+ a.classList.add("active");filter=a.dataset.f;favOnly=false;
+ $("#links").classList.remove("open");render();
+ window.scrollTo({top:0,behavior:"smooth"});
+});
+$("#q").oninput=e=>{term=e.target.value.toLowerCase().trim();render()};
+$("#sort").onchange=e=>{sort=e.target.value;render()};
+$("#burger").onclick=()=>$("#links").classList.toggle("open");
+$("#cart").onclick=()=>panel("#drawer",true);
+$("#dclose").onclick=$("#ov").onclick=()=>panel("#drawer",false);
+$("#clr").onclick=()=>{cart=[];save("cart",cart);renderCart()};
+$("#checkout").onclick=()=>{if(!cart.length)return toast("Savat bo'sh");cart=[];save("cart",cart);renderCart();panel("#drawer",false);toast("Buyurtma qabul qilindi. Rahmat!")};
+$("#fav").onclick=()=>{favOnly=!favOnly;render()};
+$("#mclose").onclick=()=>panel("#modal",false);
+$("#modal").onclick=e=>{if(e.target.id==="modal")panel("#modal",false)};
+$("#madd").onclick=()=>{addToCart(cur.id,curO);panel("#modal",false)};
+document.onkeydown=e=>{if(e.key==="Escape"){panel("#modal",false);panel("#drawer",false)}};
+$("#up").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
+addEventListener("scroll",()=>{$("#up").style.display=scrollY>600?"block":"none"});
+renderCart();
+render();
+
+/* ===== Ro'yxatdan o'tish ===== */
+const F=$("#form");
+F.onsubmit=e=>{
+ e.preventDefault();
+ const v=id=>$("#"+id).value.trim();
+ const er={};
+ if(v("name").length<2)er.name="Ismingizni kiriting.";
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("email")))er.email="To'g'ri email kiriting.";
+ if(v("pw").length<8)er.pw="Parol kamida 8 belgidan iborat bo'lsin.";
+ if(v("pw2")!==v("pw")||!v("pw2"))er.pw2="Parollar bir xil emas.";
+ if(!$("#agree").checked)er.agree="Davom etish uchun rozilik bering.";
+ F.querySelectorAll(".err").forEach(d=>d.textContent=er[d.dataset.e]||"");
+ if(Object.keys(er).length)return;
+ /* Bu yerda ma'lumotni serveringizga yuboring (fetch). Hozir faqat ko'rsatiladi. */
+ $("#fields").style.display="none";
+ const ok=$("#ok");ok.style.display="block";
+ ok.textContent=`Rahmat, ${v("name")}! ${v("email")} manziliga tasdiqlash xati yuborildi.`;
+};
+</script>
+</body>
+</html>
